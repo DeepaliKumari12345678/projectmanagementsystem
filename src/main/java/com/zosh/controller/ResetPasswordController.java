@@ -26,53 +26,56 @@ public class ResetPasswordController {
     @Autowired
     private UserService userService;
 
+    // Method to handle actual password reset via token
     @PostMapping
     public ResponseEntity<ApiResponse> resetPassword(
-    		
-    		@RequestBody ResetPasswordRequest req) throws UserException {
+            @RequestBody ResetPasswordRequest req) throws UserException {
         
         PasswordResetToken resetToken = passwordResetTokenService.findByToken(req.getToken());
 
-        if (resetToken == null ) {
-        	throw new UserException("token is required...");
+        // Check if the token is valid
+        if (resetToken == null) {
+            throw new UserException("Invalid or missing token.");
         }
-        if(resetToken.isExpired()) {
-        	passwordResetTokenService.delete(resetToken);
-        	throw new UserException("token get expired...");
         
+        // Check if the token is expired
+        if (resetToken.isExpired()) {
+            passwordResetTokenService.delete(resetToken);
+            throw new UserException("Token has expired.");
         }
 
         // Update user's password
         User user = resetToken.getUser();
         userService.updatePassword(user, req.getPassword());
 
-        // Delete the token
+        // Delete the token after a successful password reset
         passwordResetTokenService.delete(resetToken);
         
-        ApiResponse res=new ApiResponse();
+        // Prepare a successful response
+        ApiResponse res = new ApiResponse("Password updated successfully." ,true);
         res.setMessage("Password updated successfully.");
         res.setStatus(true);
 
         return ResponseEntity.ok(res);
     }
     
+    // Method to trigger password reset email
     @PostMapping("/reset")
     public ResponseEntity<ApiResponse> resetPassword1(@RequestParam("email") String email) throws UserException {
         User user = userService.findUserByEmail(email);
-        System.out.println("ResetPasswordController.resetPassword()");
 
         if (user == null) {
-        	throw new UserException("user not found");
+            throw new UserException("User not found with this email address.");
         }
 
+        // Send password reset email
         userService.sendPasswordResetEmail(user);
 
-        ApiResponse res=new ApiResponse();
+        // Prepare a successful response
+        ApiResponse res = new ApiResponse("Password reset email sent successfully." , true);
         res.setMessage("Password reset email sent successfully.");
         res.setStatus(true);
 
         return ResponseEntity.ok(res);
     }
-    
 }
-

@@ -46,7 +46,6 @@ public class ProjectController {
     @Autowired
     private InvitationService invitationService;
     
-
     @GetMapping
     public ResponseEntity<List<Project>> getProjects(
             @RequestParam(required = false) String category,
@@ -68,7 +67,7 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<Project> createProject(
             @RequestBody Project project,
-                                                 @RequestHeader("Authorization") String token) throws UserException, ProjectException {
+            @RequestHeader("Authorization") String token) throws UserException, ProjectException {
         User user = userService.findUserProfileByJwt(token);
         project.setOwner(user);
         Project createdProject = projectService.createProject(project, user.getId());
@@ -94,27 +93,14 @@ public class ProjectController {
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/user")
-//    public ResponseEntity<List<Project>> getProjectsByOwner(@RequestHeader("Authorization") String token) throws ProjectException {
-//        try {
-//            User owner = userService.findUserProfileByJwt(token);
-//            List<Project> projects = projectService.getProjectsByOwner(owner);
-//            return new ResponseEntity<>(projects, HttpStatus.OK);
-//        } catch (UserException e) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-
-
-
     @GetMapping("/search")
     public ResponseEntity< List<Project>> searchProjects(
             @RequestParam(required = false) String keyword,
             @RequestHeader("Authorization") String jwt
     ) throws ProjectException, UserException {
         User user=userService.findUserProfileByJwt(jwt);
-            List<Project> projects = projectService.searchProjects(keyword,user);
-            return ResponseEntity.ok(projects);
+        List<Project> projects = projectService.searchProjects(keyword,user);
+        return ResponseEntity.ok(projects);
     }
     
     @PostMapping("/{userId}/add-to-project/{projectId}")
@@ -133,18 +119,16 @@ public class ProjectController {
         return chat != null ? ResponseEntity.ok(chat) : ResponseEntity.notFound().build();
     }
     
-
-    
     @PostMapping("/invite")
     public ResponseEntity<MessageResponse> inviteToProject(
             @RequestBody ProjectInvitationRequest req) throws MailsException, MessagingException {
 
+        // Send the invitation email
         invitationService.sendInvitation(req.getEmail(), req.getProjectId());
 
-            MessageResponse res=new MessageResponse();
-            res.setMessage("User invited to the project successfully");
-            return ResponseEntity.ok(res);
-
+        // Create and return the response with the success message
+        MessageResponse response = new MessageResponse("User invited to the project successfully");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/accept_invitation")
@@ -158,10 +142,4 @@ public class ProjectController {
 
         return new ResponseEntity<>(invitation,HttpStatus.ACCEPTED);
     }
-
-    
 }
-
-
-
-

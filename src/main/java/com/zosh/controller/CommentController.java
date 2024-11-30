@@ -45,7 +45,7 @@ public class CommentController {
                                                          @RequestHeader("Authorization") String jwt) throws UserException, IssueException, ProjectException {
         User user = userService.findUserProfileByJwt(jwt);
         commentService.deleteComment(commentId, user.getId());
-        MessageResponse res=new MessageResponse();
+        MessageResponse res=new MessageResponse(jwt);
         res.setMessage("comment deleted successfully");
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

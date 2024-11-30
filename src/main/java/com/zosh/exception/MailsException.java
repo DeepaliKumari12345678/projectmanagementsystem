@@ -1,10 +1,11 @@
 package com.zosh.exception;
 
-public class MailsException extends Exception{
 
-	public MailsException(String message) {
-		super(message);
-		
-	}
-  
+
+public class MailsException extends RuntimeException {
+
+    public MailsException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
+

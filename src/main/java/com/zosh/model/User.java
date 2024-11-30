@@ -36,6 +36,82 @@ public class User {
 //	private Subscription subscription;
 
 	private int projectSize=0;
+
+
+	public String getFullName() {
+		return fullName;
+	}
+
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	public String getRole() {
+		return role;
+	}
+
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+	public List<Issue> getAssignedIssues() {
+		return assignedIssues;
+	}
+
+
+	public void setAssignedIssues(List<Issue> assignedIssues) {
+		this.assignedIssues = assignedIssues;
+	}
+
+
+	public int getProjectSize() {
+		return projectSize;
+	}
+
+
+	public void setProjectSize(int projectSize) {
+		this.projectSize = projectSize;
+	}
+
+
+	
+
+
+	
 	
 //    @JsonIgnore
 //    @ManyToMany(mappedBy = "team")
@@ -43,3 +119,4 @@ public class User {
 //
 
 }
+

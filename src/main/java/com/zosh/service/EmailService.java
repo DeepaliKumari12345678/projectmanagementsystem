@@ -17,11 +17,9 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-
-    public void sendEmailWithToken(String userEmail, String link) throws MessagingException, MailsException {
+    public void sendEmailWithToken(String userEmail, String link) throws MailsException, MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        
 
         String subject = "Join Project Team Invitation";
         String text = "Click the link to join the project team: " + link;
@@ -33,8 +31,8 @@ public class EmailService {
         try {
             javaMailSender.send(mimeMessage);
         } catch (MailException e) {
-            throw new MailsException("Failed to send email");
+            e.printStackTrace();
+            throw new MailsException("Failed to send email to " + userEmail, e);
         }
     }
 }
-
